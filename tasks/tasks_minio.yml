@@ -87,7 +87,7 @@
 
   - name: Minio | Fix configuration file
     file: path="/etc/minio/config.json" owner="root" group="{{minio_user}}" mode="u=rw,g=r,o="
+    when: docker_test is not defined    
     become: yes
     tags:
       - minio
-

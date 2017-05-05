@@ -21,7 +21,7 @@ USER="{{ minio_user }}"
 [ -r "/etc/default/minio" ] && . /etc/default/minio
 
 # Make sure the MINIO_VOLUMES variable is defined
-[ -n "${MINIO_VOLUMES}" ] || log_daemon_msg "Variable MINIO_VOLUMES not set in {{ minio_server_envfile }}"
+[ -n "${MINIO_VOLUMES}" ] || log_daemon_msg "Variable MINIO_VOLUMES not set in /etc/default/minio"
 
 # Set the DAEMON_ARGS variable
 DAEMON_ARGS="server $MINIO_OPTS $MINIO_VOLUMES"
