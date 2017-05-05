@@ -1,0 +1,18 @@
+---
+# defaults file for sa-minio
+
+role_dir: "{{role_path}}"
+
+minio_home: "/opt/minio"
+minio_data_dirs:
+  - "{{minio_home}}/data"
+
+minio_server_addr: "{{ansible_eth0.ipv4.address}}"
+minio_server_port: 9091
+
+# minio_access_key:
+# minio_secret_key:
+
+options_create_minio_user: true
+option_install_minio_server: true
+option_install_minio_client: false

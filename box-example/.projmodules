@@ -1,0 +1,3 @@
+[submodule "roles/sa-minio"]
+        path = roles/sa-minio
+        url = https://github.com/softasap/sa-minio.git
