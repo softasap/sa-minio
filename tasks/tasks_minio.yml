@@ -15,6 +15,12 @@
     tags:
       - minio
 
+  - name: Minio | Create configuration directory
+    file: path="/etc/minio" state="directory" owner="{{minio_user}}" group="{{minio_user}}"
+    become: yes
+    tags:
+      - minio
+
   - name: Minio | Create data directories
     file: path="{{item}}" state="directory" owner="{{minio_user}}" group="{{minio_user}}"
     with_items:
@@ -66,9 +72,22 @@
 
     when: option_install_minio_client
 
-  - name: enable and start the minio service
+  - name: Minio | enable and start the minio service
     service: name=minio state=restarted enabled=yes
     when: docker_test is not defined
     become: yes
     tags:
       - minio
+
+  - name: Minio | Fix configuration directory
+    file: path="/etc/minio" state="directory" owner="root" group="{{minio_user}}"
+    become: yes
+    tags:
+      - minio
+
+  - name: Minio | Fix configuration file
+    file: path="/etc/minio/config.json" owner="root" group="{{minio_user}}"
+    become: yes
+    tags:
+      - minio
+
