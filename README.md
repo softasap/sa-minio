@@ -46,10 +46,15 @@ Advanced:
 
 ```YAML
   roles:
-    - {
-        role: "sa-minio",
-        option_install_minio_server: true
-      }
+     - {
+         role: "sa-minio",
+         minio_server_addr: "{{ansible_eth0.ipv4.address}}",
+         minio_server_opts: "",
+         minio_user: minio,
+         minio_access_key: "XCF1G7SEAZ1O04QM83WN",
+         minio_secret_key: "7cloFo3jrfOdxTMTyBPNXlWK2EB6nd72YGBC0cTt"
+
+       }
 ```
 
 Copyright and license
