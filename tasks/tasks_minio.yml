@@ -86,7 +86,7 @@
       - minio
 
   - name: Minio | Fix configuration file
-    file: path="/etc/minio/config.json" owner="root" group="{{minio_user}}"
+    file: path="/etc/minio/config.json" owner="root" group="{{minio_user}}" mode="u=rw,g=r,o="
     become: yes
     tags:
       - minio
