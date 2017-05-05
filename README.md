@@ -48,7 +48,7 @@ Advanced:
   roles:
      - {
          role: "sa-minio",
-         minio_server_addr: "{{ansible_eth0.ipv4.address}}",
+         minio_server_addr: "{{ansible_default_ipv4.address}}",
          minio_server_opts: "",
          minio_user: minio,
          minio_access_key: "XCF1G7SEAZ1O04QM83WN",

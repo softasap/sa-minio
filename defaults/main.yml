@@ -7,7 +7,7 @@ minio_home: "/opt/minio"
 minio_data_dirs:
   - "{{minio_home}}/data"
 
-minio_server_addr: "{{ansible_eth0.ipv4.address}}"
+minio_server_addr: "{{ansible_default_ipv4.address}}"
 minio_server_port: 9091
 
 minio_server_opts: ""
