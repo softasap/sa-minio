@@ -9,12 +9,12 @@ AssertFileIsExecutable={{ minio_home }}/minio
 WorkingDirectory="{{minio_home}}"
 
 User={{ minio_user }}
-Group={{ minio_group }}
+Group={{ minio_user }}
 
 PermissionsStartOnly=true
 
-EnvironmentFile={{ minio_server_envfile }}
-ExecStartPre=/bin/bash -c "[ -n \"${MINIO_VOLUMES}\" ] || echo \"Variable MINIO_VOLUMES not set in {{ minio_server_envfile }}\""
+EnvironmentFile=/etc/default/minio
+ExecStartPre=/bin/bash -c "[ -n \"${MINIO_VOLUMES}\" ] || echo \"Variable MINIO_VOLUMES not set in /etc/default/minio\""
 ExecStart={{ minio_home }}/minio server $MINIO_OPTS $MINIO_VOLUMES
 
 StandardOutput=journal

@@ -8,7 +8,7 @@
       - minio
 
   - name: Minio | Create home directory
-    file: path="{{minio_home}}" state="directory" owner="{{root}}" group="{{minio_user}}"
+    file: path="{{minio_home}}" state="directory" owner="root" group="{{minio_user}}"
     with_items:
       - "{{minio_data_dirs}}"
     become: yes
@@ -26,7 +26,7 @@
   - block:
 
     - name: Minio | download minio server distribution
-      get_url: url="https://dl.minio.io/server/minio/release/linux-amd64/minio" dest="{{ minio_home }}/minio"  owner="{{ minio_user }}" group="{{ minio_group }}" mode=0755
+      get_url: url="https://dl.minio.io/server/minio/release/linux-amd64/minio" dest="{{ minio_home }}/minio"  owner="{{ minio_user }}" group="{{ minio_user }}" mode=0755
       become: yes
       tags:
         - minio
@@ -38,16 +38,18 @@
         - minio
       notify: restart minio
 
+    - debug: msg="Detected startup {{upstart_detect_raw}}"
+
     - name: Minio | create systemd startup
       template: src="{{role_dir}}/templates/systemd.service.j2"  dest="/etc/systemd/system/minio.service"
-      when: upstart_detect_raw == "systemd"
+      when: upstart_system == "systemd"
       become: yes
       tags:
         - minio
 
     - name: Minio | create initd startup
       template: src="{{role_dir}}/templates/init.j2"  dest="/etc/init.d/minio" mode=755
-      when: upstart_detect_raw == "upstart"
+      when: upstart_system == "upstart"
       become: yes
       tags:
         - minio
