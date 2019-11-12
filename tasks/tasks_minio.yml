@@ -1,30 +1,30 @@
 ---
 
   - name: Minio | Add minio user
-    user: name="{{minio_user}}" shell="/bin/false"
+    user: name="{{ minio_user }}" shell="/bin/false"
     when: options_create_minio_user
     become: yes
     tags:
       - minio
 
   - name: Minio | Create home directory
-    file: path="{{minio_home}}" state="directory" owner="root" group="{{minio_user}}"
+    file: path="{{ minio_home }}" state="directory" owner="root" group="{{ minio_user }}"
     with_items:
-      - "{{minio_data_dirs}}"
+      - "{{ minio_data_dirs }}"
     become: yes
     tags:
       - minio
 
   - name: Minio | Create configuration directory
-    file: path="/etc/minio" state="directory" owner="{{minio_user}}" group="{{minio_user}}"
+    file: path="/etc/minio" state="directory" owner="{{ minio_user }}" group="{{ minio_user }}"
     become: yes
     tags:
       - minio
 
   - name: Minio | Create data directories
-    file: path="{{item}}" state="directory" owner="{{minio_user}}" group="{{minio_user}}"
+    file: path="{{ item }}" state="directory" owner="{{ minio_user }}" group="{{ minio_user }}"
     with_items:
-      - "{{minio_data_dirs}}"
+      - "{{ minio_data_dirs }}"
     become: yes
     tags:
       - minio
@@ -32,29 +32,34 @@
   - block:
 
     - name: Minio | download minio server distribution
-      get_url: url="https://dl.minio.io/server/minio/release/linux-amd64/minio" dest="{{ minio_home }}/minio"  owner="{{ minio_user }}" group="{{ minio_user }}" mode=0755
+      get_url:
+        url: "https://dl.minio.io/server/minio/release/linux-amd64/minio"
+        dest: "{{ minio_home }}/minio"
+        owner: "{{ minio_user }}"
+        group: "{{ minio_user }}"
+        mode: 0755
       become: yes
       tags:
         - minio
 
     - name: Minio | generate the minio server envfile
-      template:  src="{{role_dir}}/templates/minio.env.j2" dest="/etc/default/minio"
+      template:  src="{{ role_dir }}/templates/minio.env.j2" dest="/etc/default/minio"
       become: yes
       tags:
         - minio
       notify: restart minio
 
-    - debug: msg="Detected startup {{upstart_detect_raw}}"
+    - debug: msg="Detected startup {{ upstart_detect_raw }}"
 
     - name: Minio | create systemd startup
-      template: src="{{role_dir}}/templates/systemd.service.j2"  dest="/etc/systemd/system/minio.service"
+      template: src="{{ role_dir }}/templates/systemd.service.j2"  dest="/etc/systemd/system/minio.service"
       when: upstart_system == "systemd"
       become: yes
       tags:
         - minio
 
     - name: Minio | create initd startup
-      template: src="{{role_dir}}/templates/init.j2"  dest="/etc/init.d/minio" mode=755
+      template: src="{{ role_dir }}/templates/init.j2"  dest="/etc/init.d/minio" mode=755
       when: upstart_system == "upstart"
       become: yes
       tags:
@@ -65,7 +70,12 @@
   - block:
 
     - name: Minio | download minio client distribution
-      get_url: url="https://dl.minio.io/client/mc/release/linux-amd64/mc" dest="{{ minio_home }}/mc"  owner="{{ minio_user }}" group="{{ minio_group }}" mode=0755
+      get_url:
+        url: "https://dl.minio.io/client/mc/release/linux-amd64/mc"
+        dest: "{{ minio_home }}/mc"
+        owner: "{{ minio_user }}"
+        group: "{{ minio_group }}"
+        mode: 0755
       become: yes
       tags:
         - minio
@@ -80,14 +90,14 @@
       - minio
 
   - name: Minio | Fix configuration directory
-    file: path="/etc/minio" state="directory" owner="root" group="{{minio_user}}"
+    file: path="/etc/minio" state="directory" owner="root" group="{{ minio_user }}"
     become: yes
     tags:
       - minio
 
   - name: Minio | Fix configuration file
-    file: path="/etc/minio/config.json" owner="root" group="{{minio_user}}" mode="u=rw,g=r,o="
-    when: docker_test is not defined    
+    file: path="/etc/minio/config.json" owner="root" group="{{ minio_user }}" mode="u=rw,g=r,o="
+    when: docker_test is not defined
     become: yes
     tags:
       - minio
